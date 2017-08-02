@@ -26,13 +26,6 @@ inp = None
 #Settings
 button = 25 #GPIO Pin with button connected
 
-
-# We're British and we spell "colour" correctly :) Colour code for RAINBOWZ!!
-colours = [[255, 0, 0], [255, 0, 0], [255, 105, 0], [255, 223, 0], [170, 255, 0], [52, 255, 0], [0, 255, 66], [0, 255, 183]]
-
-# Loudness for highest bar of RGB display
-max_loud = 1024
-
 # When button is released, audio recording finishes and sent to Amazon's Alexa service
 def release_button():
     print "released!"
@@ -81,27 +74,26 @@ def continue_pressed():
         #set_display(loudness) # Set the display to show this "loudness"
 
 # Event handler for button
+#This function understands what state the button is in and directs this state to the
+#releasebutton() or press_button() or continue_pressed() functions
+
 def handle_enter(pressed):
     handlers = [release_button, press_button, continue_pressed] # 0=released, 1=pressed, 2=held
     handlers[pressed]()
 
-def event_loop_button():
-    GPIO.add_event_detect(button, GPIO.BOTH, callback=testcallback)
-    try:
-        while True:
-            pass
-    finally:
-        GPIO.cleanup()
+#Insert an event loop function here which will detect a button event. 
+#You will need a callback to a function that will determine if the event is the button down or up. 
+#Don't forget the try and the finally with GPIO.cleanup() !
+
+'''Function goes here'''
+
+#Insert a function that is triggered via the callback. 
+#This function should check if the button is down or up. 
+#When the button is pressed it should send trigger handle_enter(1) #press_button
+#You should then immediately have a while loop that says while button is pressed, trigger handle_enter(2) #continue_pressed
+#When the button is released, the while loop will exit and in the else you should trigger handle_enter(0) #released_button
         
-def testcallback(button):
-    if GPIO.input(button):
-        print("Down!")
-        handle_enter(1)
-        while GPIO.input(button):
-            handle_enter(2)
-    else:
-        print("Up!")
-        handle_enter(0)
+'''Function goes here'''
     
 if __name__ == "__main__": # Run when program is called (won't run if you decide to import this program)
 
